@@ -18,11 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/ueditor")
 public class UeditorController {
     private final static Logger logger = LoggerFactory.getLogger(UeditorController.class);
 
-    @RequestMapping(value="/config")
+    @RequestMapping(value="/ueditor/config")
     public void config(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
         String rootPath = request.getSession().getServletContext().getRealPath("/");

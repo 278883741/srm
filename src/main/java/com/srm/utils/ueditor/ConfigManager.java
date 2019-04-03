@@ -170,13 +170,13 @@ public final class ConfigManager {
 
 
     private String getConfigPath () {
-//        return this.parentPath + File.separator + ConfigManager.configFileName;
-        try {
-            //获取classpath下的config.json路径
-            return this.getClass().getClassLoader().getResource("config.json").toURI().getPath();
-        } catch (URISyntaxException e) {
-            return null;
-        }
+        return this.parentPath + File.separator + ConfigManager.configFileName;
+//        try {
+//            //获取classpath下的config.json路径
+//            return this.getClass().getClassLoader().getResource("config.json").toURI().getPath();
+//        } catch (URISyntaxException e) {
+//            return null;
+//        }
     }
 
     private String[] getArray ( String key ) {
