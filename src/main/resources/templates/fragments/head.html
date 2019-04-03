@@ -1,57 +1,41 @@
 <head th:fragment="header">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="utf-8" />
-    <title>文签管理系统</title>
+    <title>Dashboard - Ace Admin</title>
 
-    <meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
-    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-    <!-- basic styles -->
-
-    <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" />
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}" />
-
-    <!--[if IE 7]>
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome-ie7.min.css}" />
-    <![endif]-->
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
+    <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">
 
     <!-- page specific plugin styles -->
 
-    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.full.min.css}" />
-    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}" />
 
-
-    <!-- fonts -->
-
-    <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />-->
 
     <!-- ace styles -->
+    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" class="ace-main-stylesheet" id="main-ace-style" />
 
-    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" />
-    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}" />
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" th:href="@{/assets/css/ace-part2.min.css}" class="ace-main-stylesheet" />
+    <![endif]-->
     <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}" />
 
-    <!--[if lte IE 8]>
+    <!--[if lte IE 9]>
     <link rel="stylesheet" th:href="@{/assets/css/ace-ie.min.css}" />
-
-    <link rel="stylesheet" th:href="@{/jpGrid/jquery-ui.css}" />
-
-    <link rel="stylesheet" th:href="@{/jpGrid/ui.jqgridffe4.css}" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
-
     <script th:src="@{/assets/js/ace-extra.min.js}"></script>
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
-    <!--[if lt IE 9]>
-    <script th:src="@{/assets/js/html5shiv.js}"></script>
+    <!--[if lte IE 8]>
+    <script th:src="@{/assets/js/html5shiv.min.js}"></script>
     <script th:src="@{/assets/js/respond.min.js}"></script>
-
-
-
     <![endif]-->
 </head>
