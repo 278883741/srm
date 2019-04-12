@@ -24,4 +24,11 @@ public interface UserService {
      * @return
      */
     public User get(User user);
+
+    /**
+     * 更新实体
+     * @param user
+     * @return
+     */
+    public Integer update(User user);
 }

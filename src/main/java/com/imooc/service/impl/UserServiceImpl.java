@@ -43,4 +43,9 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public Integer update(User user) {
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
 }

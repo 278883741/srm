@@ -1,5 +1,7 @@
 package com.imooc.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -26,6 +28,7 @@ public class User {
      * password
      */
     @ApiModelProperty(value = "用户密码", name = "password", example = "123456", required = true)
+//    @JsonIgnore
     private String password;
 
     /**
@@ -61,6 +64,15 @@ public class User {
     @Column(name = "receive_like_count")
     @ApiModelProperty(hidden = true)
     private Integer receiveLikeCount;
+
+    @Transient
+    private String userToken;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+    public String getUserToken() {
+        return userToken;
+    }
 
     /**
      * 获取id
