@@ -22,4 +22,10 @@ public class BgmServiceImpl implements BgmService {
     public List<Bgm> getList(Bgm bgm) {
         return bgmMapper.select(bgm);
     }
+
+    @Override
+    public boolean add(Bgm bgm) {
+        int i = bgmMapper.insertSelective(bgm);
+        return i > 0;
+    }
 }

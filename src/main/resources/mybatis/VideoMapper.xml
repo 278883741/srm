@@ -7,8 +7,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="audio_id" jdbcType="INTEGER" property="audioId" />
-    <result column="video_desc" jdbcType="VARCHAR" property="videoDesc" />
+    <result column="video_desccription" jdbcType="VARCHAR" property="videoDesccription" />
     <result column="video_path" jdbcType="VARCHAR" property="videoPath" />
     <result column="video_seconds" jdbcType="REAL" property="videoSeconds" />
     <result column="video_width" jdbcType="INTEGER" property="videoWidth" />
@@ -18,4 +17,14 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+<!--  <select id="queryVideoAndUserInfo" resultType="java.util.map" >-->
+<!--    select video.* ,user.face_image,user.nick_name from-->
+<!--    (-->
+<!--      (select * from video where status = 1) as video-->
+<!--      inner join-->
+<!--      (select id,face_image,nick_name from user) as user-->
+<!--    )-->
+<!--    on video.user_id = user.id;-->
+<!--  </select>-->
 </mapper>

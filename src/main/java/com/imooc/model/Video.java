@@ -18,16 +18,10 @@ public class Video {
     private Integer userId;
 
     /**
-     * 视频配的音频id
-     */
-    @Column(name = "audio_id")
-    private Integer audioId;
-
-    /**
      * 视频配字
      */
-    @Column(name = "video_desc")
-    private String videoDesc;
+    @Column(name = "video_desccription")
+    private String videoDesccription;
 
     /**
      * 视频路径
@@ -110,39 +104,21 @@ public class Video {
     }
 
     /**
-     * 获取视频配的音频id
-     *
-     * @return audio_id - 视频配的音频id
-     */
-    public Integer getAudioId() {
-        return audioId;
-    }
-
-    /**
-     * 设置视频配的音频id
-     *
-     * @param audioId 视频配的音频id
-     */
-    public void setAudioId(Integer audioId) {
-        this.audioId = audioId;
-    }
-
-    /**
      * 获取视频配字
      *
-     * @return video_desc - 视频配字
+     * @return video_desccription - 视频配字
      */
-    public String getVideoDesc() {
-        return videoDesc;
+    public String getVideoDesccription() {
+        return videoDesccription;
     }
 
     /**
      * 设置视频配字
      *
-     * @param videoDesc 视频配字
+     * @param videoDesccription 视频配字
      */
-    public void setVideoDesc(String videoDesc) {
-        this.videoDesc = videoDesc;
+    public void setVideoDesccription(String videoDesccription) {
+        this.videoDesccription = videoDesccription;
     }
 
     /**

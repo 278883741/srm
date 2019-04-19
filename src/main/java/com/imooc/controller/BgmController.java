@@ -22,15 +22,14 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
-//@Controller
 @RestController
-@Api(value = "背景音乐接口", tags = {"背景音乐注册接口的controller"})
+@Api(value = "背景音乐接口", tags = {"背景音乐接口"})
 public class BgmController {
     @Autowired
     BgmService bgmService;
 
     @RequestMapping(value = "/queryList", method = RequestMethod.GET)
-    @ApiOperation(value = "获取背景音乐列表", notes = "获取背景音乐列表的接口")
+    @ApiOperation(value = "获取背景音乐列表", notes = "获取背景音乐列表")
     public Object register() throws Exception {
         JSONObject jsonObject = new JSONObject();
         Bgm bgm = new Bgm();

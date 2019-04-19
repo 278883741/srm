@@ -11,4 +11,11 @@ public interface BgmService {
      * @return
      */
     public List<Bgm> getList(Bgm bgm);
+
+    /**
+     * 添加背景音乐
+     * @param bgm
+     * @return
+     */
+    public boolean add(Bgm bgm);
 }

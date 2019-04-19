@@ -11,19 +11,18 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.UUID;
 
-//@Controller
 @RestController
-@Api(value = "用户登录注册接口", tags = {"注册和登录的controller"})
+@Api(value = "用户接口", tags = {"用户接口"})
+@RequestMapping(value = "/user")
 public class UserController {
     @Autowired
     UserService userService;
@@ -31,7 +30,7 @@ public class UserController {
     RedisHelper redisHelper;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    @ApiOperation(value = "用户注册", notes = "用户注册的接口")
+    @ApiOperation(value = "用户注册", notes = "用户注册")
     public Object register(@RequestBody User user) throws Exception {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(user.getUserName()) || StringUtils.isEmpty(user.getPassword())) {
@@ -63,7 +62,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ApiOperation(value = "用户登录", notes = "用户登录的接口")
+    @ApiOperation(value = "用户登录", notes = "用户登录")
     public Object login(@RequestBody User user) throws Exception {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(user.getUserName()) || StringUtils.isEmpty(user.getPassword())) {
@@ -75,7 +74,7 @@ public class UserController {
         user = userService.get(user);
         if (user != null) {
             String uniqueToken = UUID.randomUUID().toString();
-            redisHelper.set(Contants.USER_REDIS_SESSION + ":" + user.getId(), uniqueToken, 1 * 60 * 30);
+//            redisHelper.set(Contants.USER_REDIS_SESSION + ":" + user.getId(), uniqueToken, 1 * 60 * 30);
             jsonObject.put("status", 1);
             jsonObject.put("msg", "登录成功");
             jsonObject.put("data", user);
@@ -88,22 +87,21 @@ public class UserController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query")
-    @ApiOperation(value = "用户注销", notes = "用户注销的接口")
+    @ApiOperation(value = "用户注销", notes = "用户注销")
     public Object logout(String userId) throws Exception {
         JSONObject jsonObject = new JSONObject();
         String key = Contants.USER_REDIS_SESSION + ":" + userId;
-        redisHelper.del(key);
+//        redisHelper.del(key);
         jsonObject.put("status", 1);
         jsonObject.put("msg", "注销成功");
         return jsonObject;
     }
 
     @RequestMapping(value = "/uploadFace", method = RequestMethod.POST)
-    @ApiOperation(value = "用户上传头像", notes = "用户上传头像的接口")
+    @ApiOperation(value = "用户上传头像", notes = "用户上传头像")
     @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query")
     public Object uploadFace(Integer userId, @RequestParam("files") MultipartFile[] files) throws Exception {
         JSONObject jsonObject = new JSONObject();
-
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
         try {
@@ -156,6 +154,7 @@ public class UserController {
     @ApiOperation(value = "查询用户信息", notes = "查询用户信息接口")
     @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query")
     public Object queryUserInfo(Integer userId) {
+
         JSONObject jsonObject = new JSONObject();
         User user = new User();
         user.setId(userId);
