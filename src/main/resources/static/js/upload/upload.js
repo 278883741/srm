@@ -1,6 +1,6 @@
-//判断照片大小以及格式
+// 判断照片大小以及格式
 function checkUp(obj) {
-    photoExt = obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();//获得文件后缀
+    photoExt = obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();// 获得文件后缀
 
     if (!getFileSize(obj)) {
         layer.msg("请上传20M以内的文件!请重新选择文件！", {
@@ -25,9 +25,8 @@ function checkUp(obj) {
  * @constructor
  */
 function getFileSize(obj) {
-    var fileSize = obj.files[0].size;//文件的大小，单位为字节B
+    var fileSize = obj.files[0].size;// 文件的大小，单位为字节B
     if (fileSize > 20 * 1024 * 1024) {
-        // 文件大于指定大小
         return false;
     } else {
         return true;

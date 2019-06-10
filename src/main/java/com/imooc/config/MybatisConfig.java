@@ -5,7 +5,6 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +23,8 @@ import java.util.Properties;
 public class MybatisConfig {
     @Value("${mybatis.typeAliasesPackage}")
     private String typeAliasesPackage;
-
-
     @Value("${mybatis.mapperLocations}")
     private String mapperLocations;
-
 
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) throws Exception {
@@ -44,6 +40,10 @@ public class MybatisConfig {
         sessionFactory.setMapperLocations(mapperLocation);
         sessionFactory.setPlugins(new Interceptor[]{pageHelper()});
 
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setCallSettersOnNulls(true);
+
+        sessionFactory.setConfiguration(configuration);
         return sessionFactory;
     }
     @Bean
@@ -73,6 +73,7 @@ public class MybatisConfig {
         pageHelper.setProperties(properties);
         return pageHelper;
     }
+
     // Spring 事务
     @Bean(name = "txManager")
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
@@ -81,11 +82,10 @@ public class MybatisConfig {
         return txManager;
     }
 
-
     @Bean(name = "mapperScannerConfigurer")
     public MapperScannerConfigurer MapperScannerConfigurer1() {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-        mapperScannerConfigurer.setBasePackage("com.aoji.mapper");
+        mapperScannerConfigurer.setBasePackage("com.imooc.mapper");
         Properties properties = new Properties();
         properties.setProperty("notEmpty", "false");
         properties.setProperty("IDENTITY", "MYSQL");

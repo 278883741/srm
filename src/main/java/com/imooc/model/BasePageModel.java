@@ -11,6 +11,9 @@ public class BasePageModel {
         return pageIndex;
     }
 
+    /**
+     * 共计页数
+     */
     private int pageTotal;
     public void setPageTotal(int pageTotal) {
         this.pageTotal = pageTotal;
@@ -19,7 +22,9 @@ public class BasePageModel {
         return pageTotal;
     }
 
-
+    /**
+     * 共计数据数
+     */
     private int records;
     public void setRecords(int records) {
         this.records = records;
@@ -37,5 +42,27 @@ public class BasePageModel {
     }
     public List<?> getAaData() {
         return aaData;
+    }
+
+    /**
+     * 实际的行数
+     */
+    private int iTotalRecords;
+    public void setiTotalRecords(int iTotalRecords) {
+        this.iTotalRecords = iTotalRecords;
+    }
+    public int getiTotalRecords() {
+        return iTotalRecords;
+    }
+
+    /**
+     * 过滤之后，实际的行数。
+     */
+    private int iTotalDisplayRecords;
+    public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+        this.iTotalDisplayRecords = iTotalDisplayRecords;
+    }
+    public int getiTotalDisplayRecords() {
+        return iTotalDisplayRecords;
     }
 }

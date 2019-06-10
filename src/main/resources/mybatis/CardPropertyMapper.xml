@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mapper.CardPropertyMapper">
+  <resultMap id="BaseResultMap" type="com.imooc.model.CardProperty">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="card_id" jdbcType="INTEGER" property="cardId" />
+    <result column="Taunt" jdbcType="BIT" property="taunt" />
+    <result column="Freeze" jdbcType="BIT" property="freeze" />
+    <result column="Windfury" jdbcType="BIT" property="windfury" />
+    <result column="Battlecry" jdbcType="BIT" property="battlecry" />
+    <result column="Stealth" jdbcType="BIT" property="stealth" />
+    <result column="Combo" jdbcType="BIT" property="combo" />
+    <result column="Aura" jdbcType="BIT" property="aura" />
+    <result column="Charge" jdbcType="BIT" property="charge" />
+    <result column="Grant_charge" jdbcType="BIT" property="grantCharge" />
+    <result column="Spellpower" jdbcType="BIT" property="spellpower" />
+    <result column="Silence" jdbcType="BIT" property="silence" />
+    <result column="Enrage" jdbcType="BIT" property="enrage" />
+    <result column="Divine_shield" jdbcType="BIT" property="divineShield" />
+    <result column="Deathrattle" jdbcType="BIT" property="deathrattle" />
+    <result column="Secret" jdbcType="BIT" property="secret" />
+    <result column="Inspire" jdbcType="BIT" property="inspire" />
+    <result column="Mission" jdbcType="BIT" property="mission" />
+    <result column="Lifesteal" jdbcType="BIT" property="lifesteal" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+</mapper>

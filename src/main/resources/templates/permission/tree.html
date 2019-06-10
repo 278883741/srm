@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" th:href="@{/ztree/css/zTreeStyle.css}"/>
+<head th:include="fragments/head::header"/>
+<body class="no-skin">
+<div class="main-container ace-save-state" id="main-container">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <input id="input_roleId" type="hidden" th:value="${roleId}"/>
+            <div class="page-content" style="margin-top: 15px;">
+                <form method="post" id="edit">
+                    <input type="hidden" name="id" id="id" th:value="${role!=null}? ${role.id}"/>
+                    <div  class="tab-pane fade in active">
+                        <ul id="roleTree" class="ztree"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submits">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery-2.1.4.js}"></script>
+<script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.core-3.5.min.js}"></script>
+<script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.excheck-3.5.min.js}"></script>
+<script th:src="@{/layer/layer.js}"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        var pageHelper = (function () {
+            this.roleId = $("#input_roleId").val();
+            // 点击节点触发
+            this.onClick = function(event, treeId, treeNode) {
+                var tree = $.fn.zTree.getZTreeObj("roleTree");
+                tree.checkNode(treeNode, !treeNode.checked, true, true);
+            }
+            // 展开方法前触发
+            this.zTreeBeforeExpand = function(treeId, treeNode) {
+                var tree = $.fn.zTree.getZTreeObj("roleTree");
+                tree.removeChildNodes(treeNode);
+                return true;
+            };
+            // 加载展开方法
+            zTreeOnExpand = function (event, treeId, treeNode, type){
+                $.post('/permission/getTreeByRoleId',
+                    {
+                        parentId : treeNode.id,
+                        roleId : roleId,
+                        level : parseInt(treeNode.level) + 2,// 这里这个tree是用的自己的level,从0开始
+                    },
+                    function(data)
+                    {
+                        if (data.success)
+                        {
+                            var dbDate = eval(data.msg);
+                            var tree = $.fn.zTree.getZTreeObj("roleTree");
+                            tree.addNodes(treeNode, dbDate);
+                            //第一次加载时传递
+                            if(type == "AUTO"){
+                                //如果节点被选中
+                                var nodes = treeNode.children;
+                                for(i=0; i<nodes.length; i++){
+                                    if(nodes[i].checked){
+                                        zTreeOnExpand(null, null, nodes[i], "AUTO");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+            return {
+                init: function () {
+                    this.getQueryData();
+                    this.handelQueryData();
+                    this.render();
+                    this.addEvent();
+                },
+                getQueryData: function () {
+                    this.index = parent.layer.getFrameIndex(window.name);
+                },
+                handelQueryData: function () {
+
+                },
+                render: function () {
+                    var _self = this;
+                    var setting =
+                        {
+                            check:
+                                {
+                                    enable: true,
+                                    chkStyle: "checkbox",
+                                    chkboxType: { "Y": "ps", "N": "ps" }
+                                },
+                            data:
+                                {
+                                    simpleData:
+                                        {
+                                            enable: true
+                                        },
+                                    keep:
+                                        {
+                                            parent: true
+                                        }
+                                },
+                            callback:
+                                {
+                                    beforeExpand: zTreeBeforeExpand,
+                                    onExpand: zTreeOnExpand,
+                                    onClick:onClick
+                                }
+                        };
+                    //首次进入加载level为1的
+                    $.post('/permission/getTreeByRoleId',{ "roleId":roleId },function(data){
+                        if (data.success) {
+                            var dbDate = eval(data.msg);
+                            $.fn.zTree.init($("#roleTree"), setting, dbDate);
+                        }
+                        // 如果节点被选中
+                        var tree = $.fn.zTree.getZTreeObj("roleTree");
+                        var nodes = tree.getNodes();
+                        for (i = 0; i < nodes.length; i++) {
+                            if (nodes[i].checked) {
+                                zTreeOnExpand(null, null, nodes[i], "AUTO");
+                            }
+                        }
+                    });
+
+                },
+                addEvent: function () {
+                    var _self = this;
+                    $("#submits").click(function () {
+                        var tree = $.fn.zTree.getZTreeObj("roleTree");
+                        var nodes = tree.getNodesByParam("checked", true, null);
+                        var permissionIds = new Array();
+                        for (var i = 0; i < nodes.length; i++) {
+                            permissionIds.push(nodes[i].id);
+                        }
+                        $.ajax({
+                            url: "/permission/save",
+                            type: "post",
+                            data: {
+                                roleId : roleId,
+                                permissionIds : JSON.stringify(permissionIds)
+                            },
+                            traditional : true,
+                            success: function (data) {
+                                parent.layer.close(_self.index);
+                            }
+                        });
+                    });
+                }
+            }
+        })();
+        pageHelper.init();
+    });
+</script>
+</body>
+</html>

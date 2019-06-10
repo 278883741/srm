@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<head th:include="fragments/head::header"/>
+<body class="no-skin">
+<div th:include="fragments/navbar::navbar"></div>
+<div class="main-container ace-save-state" id="main-container">
+    <div th:include="fragments/left::left" id="sidebar" class="sidebar  responsive ace-save-state"></div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><i class="ace-icon fa fa-home home-icon"></i> <a href="/main">首页</a></li>
+                    <li class="active">卡牌详情</li>
+                </ul>
+            </div>
+            <div class="page-content" style="margin-top: 15px;">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <div id="user-profile-1" class="user-profile row">
+                                    <div class="col-xs-12 col-sm-3 center">
+                                        <div>
+                                            <span class="profile-picture">
+                                                <img id="avatar" class="editable img-responsive" th:alt="${card.paramName}" th:src="@{'/' + ${card.id} + '.png'}" />
+                                                <!--<img id="avatar" class="editable img-responsive" alt="Alex's Avatar" th:src="@{/{cardId}(cardId = ${card.id})}" />-->
+                                            </span>
+
+                                            <div class="space-4"></div>
+
+                                            <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                                                <div class="inline position-relative">
+                                                    <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="ace-icon fa fa-circle light-orange"></i>
+                                                        <span class="white" th:text="${card != null}?${card.paramName}"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-9">
+                                        <div class="space-12"></div>
+
+                                        <div class="profile-user-info profile-user-info-striped">
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 名称 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.paramName}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 类型 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.typeDisplay}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 职业 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.occupationDisplay}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 稀有度 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.rarityDisplay}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 种类 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.kindDisplay}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 所属集合 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.setDisplay}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 费用 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Cost}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 攻击力 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Atk}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 生命 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Health}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 分解获得尘 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Dust_Decompose}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 金色分解获得尘 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Dust_Decompose_Golden}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 合成需要尘 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Dust_Synthesis}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 金色合成需要尘 </div>
+                                                <div class="profile-info-value">
+                                                    <span class="editable" th:text="${card.Dust_Synthesis_Golden}"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> 属性 </div>
+                                                <div class="profile-info-value">
+                                                    <div class="checkbox" style="display: inline;" th:each="iterStat,item: ${cardProperty}" th:if="${not #lists.isEmpty(cardProperty)}">
+                                                        <label>
+                                                            <input name="form-field-checkbox" th:checked="${item.current.value}" type="checkbox" class="ace" />
+                                                            <span class="lbl" th:text="${item.current.key}"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="space-20"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:include="fragments/bottom::bottom"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script th:src="@{/assets/js/jquery.validate.min.js}"></script>
+<script th:src="@{/assets/js/jquery.validate.zh-CN.js}"></script>
+<script th:src="@{/assets/js/jquery.dataTables.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/js/jquery.dataTables.bootstrap.js}" type="text/javascript"></script>
+<script th:src="@{/assets/js/dataTables.buttons.min.js}"></script>
+<!--<script th:src="@{/assets/js/dataTables.select.min.js}"></script>-->
+<script th:src="@{/assets/js/temp.js}" charset="UTF-8"></script>
+<script th:src="@{/assets/js/jquery-ui.custom.min.js}" charset="UTF-8"></script>
+<script th:src="@{/assets/js/spinbox.min.js}" charset="UTF-8"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        var pageHelper = (function () {
+            this.oTable1;
+            return {
+                init: function () {
+                    this.getQueryData();
+                    this.handelQueryData();
+                    this.render();
+                    this.addEvent();
+                },
+                getQueryData: function () {
+
+                },
+                handelQueryData: function () {
+
+                },
+                render: function () {
+                    var _self = this;
+
+                },
+                addEvent: function () {
+                    var _self = this;
+
+                }
+            }
+        })();
+        pageHelper.init();
+    });
+</script>
+</body>
+</html>

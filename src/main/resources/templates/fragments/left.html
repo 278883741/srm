@@ -40,9 +40,8 @@
 				<b class="arrow"></b>
 			</li>
 
-
-			<li th:each="item,iterStat:${session.permissionList}" class="">
-				<a href="#" class="dropdown-toggle">
+			<li th:each="item,iterStat:${session.permissions}" class="">
+				<a href="javascript:void(0);" class="dropdown-toggle">
 					<i class="menu-icon fa fa-list"></i>
 					<span class="menu-text" th:text="${item.permissionName}"></span>
 					<b class="arrow fa fa-angle-down" th:if="${not #lists.isEmpty(item.childList)}"></b>
@@ -50,15 +49,13 @@
 				<b class="arrow"></b>
 				<ul class="submenu">
 					<li th:each="childItem,iterStat:${item.childList}" class="">
-						<a href="form-elements.html" th:text="${childItem.permissionName}">
+						<a th:href="${childItem.permissionUrl}" th:text="${childItem.permissionName}">
 							<i class="menu-icon fa fa-caret-right"></i>
 						</a>
 						<b class="arrow"></b>
 					</li>
 				</ul>
 			</li>
-
-
 		</ul>
 
 		<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">

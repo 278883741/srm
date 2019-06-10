@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,11 +18,16 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class UeditorController {
     private final static Logger logger = LoggerFactory.getLogger(UeditorController.class);
 
-    @RequestMapping(value="/ueditor/config")
+    /**
+     * 富文本编辑器-上传图片
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value="/UEditor/config")
     public void config(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
         String rootPath = request.getSession().getServletContext().getRealPath("/");

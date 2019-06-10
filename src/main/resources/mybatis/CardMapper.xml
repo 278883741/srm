@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mapper.CardMapper">
+  <resultMap id="BaseResultMap" type="com.imooc.model.Card">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+    <result column="EName" jdbcType="VARCHAR" property="ename" />
+    <result column="Type" jdbcType="INTEGER" property="type" />
+    <result column="Occupation" jdbcType="INTEGER" property="occupation" />
+    <result column="Rarity" jdbcType="INTEGER" property="rarity" />
+    <result column="Cost" jdbcType="INTEGER" property="cost" />
+    <result column="Atk" jdbcType="INTEGER" property="atk" />
+    <result column="Health" jdbcType="INTEGER" property="health" />
+    <result column="Kind" jdbcType="INTEGER" property="kind" />
+    <result column="param_set" jdbcType="INTEGER" property="paramSet" />
+    <result column="Description" jdbcType="VARCHAR" property="description" />
+    <result column="Dust_Decompose" jdbcType="INTEGER" property="dustDecompose" />
+    <result column="Dust_Decompose_Golden" jdbcType="INTEGER" property="dustDecomposeGolden" />
+    <result column="Dust_Synthesis" jdbcType="INTEGER" property="dustSynthesis" />
+    <result column="Dust_Synthesis_Golden" jdbcType="INTEGER" property="dustSynthesisGolden" />
+    <result column="IsShow" jdbcType="BIT" property="isshow" />
+    <result column="CreateDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
+  </resultMap>
+
+  <select id="getListDisplay" parameterType="com.imooc.model.Card" resultType="java.util.Map">
+    select id,param_name as paramName,
+       (select Name from card_type where id = Type) as typeDisplay,
+       (select Name from card_occupation where id = Occupation) as occupationDisplay,
+       (select Name from card_rarity where id = Rarity) as rarityDisplay,
+       (select Name from card_kind where id = Kind) as kindDisplay,
+       (select Name from card_set where id = param_set) as setDisplay,
+        Cost,Atk,Health,Dust_Decompose,Dust_Decompose_Golden,Dust_Synthesis,Dust_Synthesis_Golden from card
+       where 1 = 1
+    <if test="card.id != null">
+      AND id = #{card.id}
+    </if>
+    <if test="card.paramName != null and card.paramName !=''">
+      AND param_name like CONCAT('%',#{card.paramName},'%')
+    </if>
+    <if test="card.kind != null and card.kind != '-1'">
+      AND kind = #{card.kind}
+    </if>
+    <if test="card.occupation != null and card.occupation != '-1'">
+      AND occupation = #{card.occupation}
+    </if>
+    <if test="card.rarity != null and card.rarity != '-1'">
+      AND rarity = #{card.rarity}
+    </if>
+    <if test="card.paramSet != null and card.paramSet != '-1'">
+      AND paramSet = #{card.paramSet}
+    </if>
+    <if test="card.health != null and card.health != '-1'">
+      <choose>
+        <when test="card.health >= 10">
+          AND health >= #{card.health}
+        </when>
+        <otherwise>
+          AND health = #{card.health}
+        </otherwise>
+      </choose>
+    </if>
+    <if test="card.cost != null and card.cost != '-1'">
+      <choose>
+        <when test="card.cost >= 10">
+          AND cost >= #{card.cost}
+        </when>
+        <otherwise>
+          AND cost = #{card.cost}
+        </otherwise>
+      </choose>
+    </if>
+  </select>
+  <select id="getListDisplaySwagger" parameterType="com.imooc.model.Card" resultType="java.util.Map">
+    select id,param_name as paramName,
+    (select Name from card_type where id = Type) as typeDisplay,
+    (select Name from card_occupation where id = Occupation) as occupationDisplay,
+    (select Name from card_rarity where id = Rarity) as rarityDisplay,
+    (select Name from card_kind where id = Kind) as kindDisplay,
+    (select Name from card_set where id = param_set) as setDisplay,
+    Cost,Atk,Health,Dust_Decompose,Dust_Decompose_Golden,Dust_Synthesis,Dust_Synthesis_Golden,
+    Taunt,Freeze,Windfury,Battlecry,Stealth,Combo,Aura,Charge,Grant_charge,Spellpower,Silence,Enrage,Divine_shield,Deathrattle,Secret,Inspire,Mission,Lifesteal from card
+    inner join
+    (select card_id, Taunt,Freeze,Windfury,Battlecry,Stealth,Combo,Aura,Charge,Grant_charge,Spellpower,Silence,Enrage,Divine_shield,Deathrattle,Secret,Inspire,Mission,Lifesteal from card_property)as cardProperty
+     on card.id = cardProperty.card_id
+    <if test="card.id != null">
+      AND id = #{card.id}
+    </if>
+    <if test="card.paramName != null and card.paramName !=''">
+      AND param_name like CONCAT('%',#{card.paramName},'%')
+    </if>
+    <if test="card.kind != null and card.kind != '-1'">
+      AND kind = #{card.kind}
+    </if>
+    <if test="card.occupation != null and card.occupation != '-1'">
+      AND occupation = #{card.occupation}
+    </if>
+    <if test="card.rarity != null and card.rarity != '-1'">
+      AND rarity = #{card.rarity}
+    </if>
+    <if test="card.paramSet != null and card.paramSet != '-1'">
+      AND paramSet = #{card.paramSet}
+    </if>
+    <if test="card.health != null and card.health != '-1'">
+      <choose>
+        <when test="card.health >= 10">
+          AND health >= #{card.health}
+        </when>
+        <otherwise>
+          AND health = #{card.health}
+        </otherwise>
+      </choose>
+    </if>
+    <if test="card.cost != null and card.cost != '-1'">
+      <choose>
+        <when test="card.cost >= 10">
+          AND cost >= #{card.cost}
+        </when>
+        <otherwise>
+          AND cost = #{card.cost}
+        </otherwise>
+      </choose>
+    </if>
+  </select>
+</mapper>
