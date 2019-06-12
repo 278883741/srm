@@ -55,4 +55,10 @@ public interface CardService {
      * @return
      */
     Integer update(Card card);
+
+    /**
+     * 获取各职业卡牌数百分比
+     * @return
+     */
+    Map<String,String> getOccupationPercent();
 }

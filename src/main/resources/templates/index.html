@@ -9,23 +9,22 @@
 
     <div class="main-content">
         <div class="main-content-inner">
+            <input type="hidden" name="occupationPercent" th:each="iterStat,item: ${occupationPercent}" th:occupation="${item.current.key}" th:occupationPercent="${item.current.value}">
             <div class="breadcrumbs ace-save-state" id="breadcrumbs">
                 <ul class="breadcrumb">
                     <li><i class="icon-home home-icon"></i> <a href="/main">首页</a></li>
                 </ul>
             </div>
-
             <div class="page-content">
                 <div class="page-header">
                     <h1>
                         HearthStone
                         <small>
                             <i class="ace-icon fa fa-angle-double-right"></i>
-                            overview &amp; stats
+                            预览
                         </small>
                     </h1>
                 </div>
-
                 <br/>
                 <div class="row">
                     <div class="col-xs-12">
@@ -37,10 +36,8 @@
                             Welcome to
                             <strong class="green">
                                 HearthStone
-                                <small>(v1.4)</small>
-                            </strong>,
+                            </strong>
                         </div>
-
                         <div class="row">
                             <div class="space-6"></div>
                             <div class="vspace-12-sm"></div>
@@ -49,49 +46,9 @@
                                     <div class="widget-header widget-header-flat widget-header-small">
                                         <h5 class="widget-title">
                                             <i class="ace-icon fa fa-signal"></i>
-                                            Traffic Sources
+                                            职业卡牌数占比
                                         </h5>
-
-                                        <div class="widget-toolbar no-border">
-                                            <div class="inline dropdown-hover">
-                                                <button class="btn btn-minier btn-primary">
-                                                    This Week
-                                                    <i class="ace-icon fa fa-angle-down icon-on-right bigger-110"></i>
-                                                </button>
-
-                                                <ul class="dropdown-menu dropdown-menu-right dropdown-125 dropdown-lighter dropdown-close dropdown-caret">
-                                                    <li class="active">
-                                                        <a href="#" class="blue">
-                                                            <i class="ace-icon fa fa-caret-right bigger-110">&nbsp;</i>
-                                                            This Week
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="#">
-                                                            <i class="ace-icon fa fa-caret-right bigger-110 invisible">&nbsp;</i>
-                                                            Last Week
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="#">
-                                                            <i class="ace-icon fa fa-caret-right bigger-110 invisible">&nbsp;</i>
-                                                            This Month
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="#">
-                                                            <i class="ace-icon fa fa-caret-right bigger-110 invisible">&nbsp;</i>
-                                                            Last Month
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
                                     </div>
-
                                     <div class="widget-body">
                                         <div class="widget-main">
                                             <div id="piechart-placeholder" style="width: 90%; min-height: 150px; padding: 0px; position: relative;">
@@ -126,29 +83,6 @@
                                                 </div>
                                             </div>
                                             <div class="hr hr8 hr-double"></div>
-                                            <div class="clearfix">
-                                                <div class="grid3">
-															<span class="grey">
-																<i class="ace-icon fa fa-facebook-square fa-2x blue"></i>
-																&nbsp; likes
-															</span>
-                                                    <h4 class="bigger pull-right">1,255</h4>
-                                                </div>
-                                                <div class="grid3">
-															<span class="grey">
-																<i class="ace-icon fa fa-twitter-square fa-2x purple"></i>
-																&nbsp; tweets
-															</span>
-                                                    <h4 class="bigger pull-right">941</h4>
-                                                </div>
-                                                <div class="grid3">
-															<span class="grey">
-																<i class="ace-icon fa fa-pinterest-square fa-2x red"></i>
-																&nbsp; pins
-															</span>
-                                                    <h4 class="bigger pull-right">1,050</h4>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -163,14 +97,31 @@
 </div>
 <script type="text/javascript">
     jQuery(function ($) {
-        var placeholder = $('#piechart-placeholder').css({'width':'90%' , 'min-height':'200px'});
-        var data = [
-            { label: "social networks",  data: 38.7, color: "#68BC31"},
-            { label: "search engines",  data: 24.5, color: "#2091CF"},
-            { label: "ad campaigns",  data: 8.2, color: "#AF4E96"},
-            { label: "direct traffic",  data: 18.6, color: "#DA5430"},
-            { label: "other",  data: 10, color: "#FEE074"}
-        ]
+        var placeholder = $('#piechart-placeholder').css({'width':'90%' , 'min-height':'250px'});
+        var data = [];
+        $("input[name='occupationPercent']").each(function () {
+            var occupation = $(this).attr("occupation");
+            var occupationpercent = $(this).attr("occupationpercent");
+            var color;
+            switch (occupation) {
+                case "中立": color = "#68BC31";break;
+                case "德鲁伊": color = "#2091CF";break;
+                case "猎人": color = "#AF4E96";break;
+                case "法师": color = "#DA5430";break;
+                case "圣骑士": color = "#FEE074";break;
+                case "牧师": color = "#8C738C";break;
+                case "潜行者": color = "#E6FF00";break;
+                case "萨满": color = "#15D5EA";break;
+                case "术士": color = "#EA15D5";break;
+                case "战士": color = "#FB3504";break;
+            }
+            var item = {
+                label:occupation,
+                data:occupationpercent,
+                color:color
+            }
+            data.push(item);
+        });
         function drawPieChart(placeholder, data, position) {
             $.plot(placeholder, data, {
                 series: {
@@ -192,8 +143,7 @@
                     position: position || "ne",
                     labelBoxBorderColor: null,
                     margin:[-30,15]
-                }
-                ,
+                },
                 grid: {
                     hoverable: true,
                     clickable: true
@@ -218,7 +168,7 @@
             if(item) {
                 if (previousPoint != item.seriesIndex) {
                     previousPoint = item.seriesIndex;
-                    var tip = item.series['label'] + " : " + item.series['percent']+'%';
+                    var tip = item.series['label'] + " : " + parseFloat(item.series['percent']).toFixed(2)+'%';
                     $tooltip.show().children(0).text(tip);
                 }
                 $tooltip.css({top:pos.pageY + 10, left:pos.pageX + 10});

@@ -52,4 +52,9 @@ public class CardServiceImpl implements CardService {
     public Integer update(Card card) {
         return cardMapper.updateByPrimaryKeySelective(card);
     }
+
+    @Override
+    public Map<String, String> getOccupationPercent() {
+        return cardMapper.getOccupationPercent();
+    }
 }

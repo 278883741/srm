@@ -2,6 +2,7 @@ package com.imooc.controller;
 
 import com.imooc.model.SysPermission;
 import com.imooc.model.SysUser;
+import com.imooc.service.CardService;
 import com.imooc.service.UserService;
 import com.imooc.utils.MD5Utils;
 import org.apache.shiro.SecurityUtils;
@@ -25,27 +26,20 @@ import java.util.List;
 public class IndexController {
     @Autowired
     UserService userService;
+    @Autowired
+    CardService cardService;
 
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model,HttpSession session) {
         SysUser user = userService.getLoginUser();
-
-//        session.setAttribute("functions",userService.getFunctionByUserId(user.getId()));
-//        session.setAttribute("user",user);
-
-        Object object = session.getAttribute("permissions");
-        model.addAttribute("permissions11",object);
-        Integer i = 1;
+        model.addAttribute("occupationPercent",cardService.getOccupationPercent());
         return "index";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
-
-//        session.setAttribute("functions",userService.getFunctionByName(user.getOaid()));
-//        session.setAttribute("user",userService.getLoginUser());
         return "login";
     }
 

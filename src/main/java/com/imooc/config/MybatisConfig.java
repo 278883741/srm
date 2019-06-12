@@ -41,8 +41,11 @@ public class MybatisConfig {
         sessionFactory.setPlugins(new Interceptor[]{pageHelper()});
 
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        // 对Map, 如果value为null的话,那么key也会被加入到map中
         configuration.setCallSettersOnNulls(true);
-
+        // 开启缓存
+        // configuration.setCacheEnabled(true);
+        configuration.
         sessionFactory.setConfiguration(configuration);
         return sessionFactory;
     }

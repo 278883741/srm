@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.imooc.mapper.CardMapper">
+  <!--<cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"/>-->
+  <!-- 开启本mapper的namespace下的二级缓存 -->
+  <!--
+      eviction:代表的是缓存回收策略，目前MyBatis提供以下策略。
+      (1) LRU,最近最少使用的
+      (2) FIFO,先进先出
+      (3) SOFT,软引用，移除基于垃圾回收器状态和软引用规则的对象
+      (4) WEAK,弱引用，更积极的移除基于垃圾收集器状态和弱引用规则的对象。这里采用的是LRU，
+              移除最长时间不用的对形象
+      flushInterval:刷新间隔时间，单位为毫秒，这里配置的是100秒刷新，如果你不配置它，那么当SQL被执行的时候才会去刷新缓存。
+      size:引用数目，一个正整数，代表缓存最多可以存储多少个对象，不宜设置过大。设置过大会导致内存溢出。这里配置的是1024个对象
+      readOnly:只读，意味着缓存数据只能读取而不能修改
+  -->
   <resultMap id="BaseResultMap" type="com.imooc.model.Card">
     <!--
       WARNING - @mbg.generated
@@ -124,5 +137,31 @@
         </otherwise>
       </choose>
     </if>
+  </select>
+  <select id="getOccupationPercent" resultType="java.util.Map">
+    select  ROUND(temp_zhongli.countTotal/tempTotal.countTotal * 100 ,1) as '中立',
+        ROUND(temp_deluyi.countTotal/tempTotal.countTotal * 100 ,1) as '德鲁伊',
+        ROUND(temp_lieren.countTotal/tempTotal.countTotal * 100 ,1) as '猎人',
+        ROUND(temp_fashi.countTotal/tempTotal.countTotal * 100 ,1) as '法师',
+        ROUND(temp_shengqishi.countTotal/tempTotal.countTotal * 100 ,1) as '圣骑士',
+        ROUND(temp_mushi.countTotal/tempTotal.countTotal * 100 ,1) as '牧师',
+        ROUND(temp_qianxingzhe.countTotal/tempTotal.countTotal * 100 ,1) as '潜行者',
+        ROUND(temp_saman.countTotal/tempTotal.countTotal * 100 ,1) as '萨满',
+        ROUND(temp_shushi.countTotal/tempTotal.countTotal * 100 ,1) as '术士',
+        ROUND(temp_zhanshi.countTotal/tempTotal.countTotal * 100 ,1) as '战士'
+    from
+    (
+      (select count(1) as countTotal from card where Occupation = 1) as temp_zhongli ,
+      (select count(1) as countTotal from card where Occupation = 2) as temp_deluyi ,
+      (select count(1) as countTotal from card where Occupation = 3) as temp_lieren ,
+      (select count(1) as countTotal from card where Occupation = 4) as temp_fashi ,
+      (select count(1) as countTotal from card where Occupation = 5) as temp_shengqishi ,
+      (select count(1) as countTotal from card where Occupation = 6) as temp_mushi ,
+      (select count(1) as countTotal from card where Occupation = 7) as temp_qianxingzhe ,
+      (select count(1) as countTotal from card where Occupation = 8) as temp_saman ,
+      (select count(1) as countTotal from card where Occupation = 9) as temp_shushi ,
+      (select count(1) as countTotal from card where Occupation = 10) as temp_zhanshi ,
+      (select count(1) as countTotal from card ) as tempTotal
+    );
   </select>
 </mapper>

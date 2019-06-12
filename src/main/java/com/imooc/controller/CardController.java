@@ -86,8 +86,8 @@ public class CardController {
         return false;
     }
 
-    @RequestMapping(value = "/editPage",method = RequestMethod.GET)
-    public String edit(Model model, Integer cardId){
+    @RequestMapping(value = "/editPage/{cardId}",method = RequestMethod.GET)
+    public String edit(Model model, @PathVariable Integer cardId){
         getCardInfoExtra(model);
 
         Card card = new Card();
@@ -108,8 +108,11 @@ public class CardController {
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public Boolean editAction(Card card) {
         if(cardService.update(card) > 0){
+            CardProperty cardPropertyTemp = new CardProperty();
+            cardPropertyTemp.setCardId(card.getId());
+            cardPropertyTemp = cardPropertyService.get(cardPropertyTemp);
             CardProperty cardProperty = card.getCardProperty();
-            cardProperty.setCardId(card.getId());
+            cardProperty.setId(cardPropertyTemp.getId());
             if(cardPropertyService.update(cardProperty)){
                 return true;
             }

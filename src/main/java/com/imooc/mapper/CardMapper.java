@@ -10,4 +10,5 @@ import java.util.Map;
 public interface CardMapper extends Mapper<Card> {
      List<Map<String,Object>> getListDisplay(@Param(value = "card") Card card);
      List<Map<String,Object>> getListDisplaySwagger(@Param(value = "card") Card card);
+     Map<String, String> getOccupationPercent();
 }
