@@ -45,7 +45,6 @@ public class MybatisConfig {
         configuration.setCallSettersOnNulls(true);
         // 开启缓存
         // configuration.setCacheEnabled(true);
-        configuration.
         sessionFactory.setConfiguration(configuration);
         return sessionFactory;
     }
