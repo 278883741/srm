@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     // @Cacheable(value = "users1",key = "'Permissions-User-'.contact(#userId)")
     public List<SysPermission> getPermissionByUserId(Integer userId) {
-        List<SysPermission> permissionParent =  sysUserMapper.getPermissionByUserId(userId);
+        List<SysPermission> permissionParent = sysUserMapper.getPermissionByUserId(userId);
         for(SysPermission item : permissionParent){
             SysPermission sysPermission = new SysPermission();
             sysPermission.setParentId(item.getId());
