@@ -86,7 +86,7 @@ public class PermissionController {
         return treeItem;
     }
 
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/save",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     @ResponseBody
     public void save(Integer roleId,String permissionIds){
         sysRolePermissionService.deleteByRoleId(roleId);
