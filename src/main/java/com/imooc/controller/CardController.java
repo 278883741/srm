@@ -45,6 +45,29 @@ public class CardController {
         return "card/list";
     }
 
+    /**
+     * 分页获取卡牌数据
+     */
+    @RequestMapping(value = "/list/query",method = RequestMethod.GET)
+    @ResponseBody
+    public BasePageModel get(Card card, PageParam pageParam,BasePageModel basePageModel){
+        String[] str = new String[]{"","id", "paramName", "typeDisplay", "occupationDisplay", "rarityDisplay", "kindDisplay", "Cost"};
+        Page<?> page = PageHelper.startPage(pageParam.getiDisplayStart() / pageParam.getiDisplayLength() + 1, pageParam.getiDisplayLength(),str[pageParam.getiSortCol_0()] + " " + pageParam.getsSortDir_0());
+
+        List<Map<String,Object>> list = cardService.getListDisplay(card);
+
+        basePageModel.setAaData(page);
+        basePageModel.setiTotalDisplayRecords((int) page.getTotal());
+        basePageModel.setiTotalRecords((int) page.getTotal());
+        basePageModel.setRecords((int) page.getTotal());
+        basePageModel.setPageTotal(page.getPages());
+
+//        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(list);
+//        basePageModel.setPageTotal(pageInfo.getPages());
+//        basePageModel.setRecords((int)pageInfo.getTotal());
+        return basePageModel;
+    }
+
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String add(Model model){
         getCardInfoExtra(model);
@@ -151,26 +174,7 @@ public class CardController {
         model.addAttribute("cardSetList",cardSetService.getList(new CardSet()));
     }
 
-    /**
-     * 分页获取卡牌数据
-     */
-    @RequestMapping(value = "/list/query",method = RequestMethod.GET)
-    @ResponseBody
-    public BasePageModel get(Card card, PageParam pageParam,BasePageModel basePageModel){
-        String[] str = new String[]{"","id", "paramName", "typeDisplay", "occupationDisplay", "rarityDisplay", "kindDisplay", "Cost"};
-        Page<?> page = PageHelper.startPage(pageParam.getiDisplayStart() / pageParam.getiDisplayLength() + 1, pageParam.getiDisplayLength(),str[pageParam.getiSortCol_0()] + " " + pageParam.getsSortDir_0());
 
-        List<Map<String,Object>> list = cardService.getListDisplay(card);
-
-        basePageModel.setAaData(page);
-        basePageModel.setiTotalDisplayRecords((int) page.getTotal());
-        basePageModel.setiTotalRecords((int) page.getTotal());
-
-        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(list);
-        basePageModel.setPageTotal(pageInfo.getPages());
-        basePageModel.setRecords((int)pageInfo.getTotal());
-        return basePageModel;
-    }
 
     @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable Integer id,Model model){
