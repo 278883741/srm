@@ -11,6 +11,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Controller
@@ -39,11 +54,21 @@ public class CardController {
     @Autowired
     CardPropertyService cardPropertyService;
 
+    // 这里的url加不加/都可以
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public String list(Model model){
         getCardInfoExtra(model);
+
         return "card/list";
+        // forward - 转发，是带model数据的，而redirect是不带的
+        // 这个是找绝对的url
+        // return "forward:/list";
+        // 这个是找相对的url，比如两个url都叫/list,那找的是自己controller下的
+        // return "forward:list";
     }
+
+
+
 
     /**
      * 分页获取卡牌数据
@@ -62,7 +87,7 @@ public class CardController {
         basePageModel.setRecords((int) page.getTotal());
         basePageModel.setPageTotal(page.getPages());
 
-//        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(list);
+        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(list);
 //        basePageModel.setPageTotal(pageInfo.getPages());
 //        basePageModel.setRecords((int)pageInfo.getTotal());
         return basePageModel;

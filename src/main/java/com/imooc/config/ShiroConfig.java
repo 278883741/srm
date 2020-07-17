@@ -16,6 +16,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// 用户login之后，交给SecurityManager，SecurityManager -> Authenticator(认证器，内部有认证策略) -> Realm
+// 多Realm的话有三种认证策略
+// AtLeastOneSuccessfulStrategy - 就算第一个成功了，realm也都会走一遍，SecurityUtils.getSubject().getPrincipal() - 会获取所有的认证成功的登录信息，如果登录名重复，只会取一个
+// AllSuccessfulStrategy
+// FirstSuccessfulStrategy - 返回第一个认证成功的身份信息，也认证第二个realm
+
 @Configuration
 public class ShiroConfig {
     /**
@@ -68,6 +74,7 @@ public class ShiroConfig {
         return ehcacheManager;
     }
 
+    // 登录拦截
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -102,7 +109,7 @@ public class ShiroConfig {
         // authc - 认证后可访问
         // filterChainDefinitionMap.put("/**", "authc");
         // user - 记住我或登录可访问
-        filterChainDefinitionMap.put("/**", "user");
+        filterChainDefinitionMap.put("/**", "anon");
 
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/login");

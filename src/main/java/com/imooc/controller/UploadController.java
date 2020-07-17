@@ -1,7 +1,9 @@
 package com.imooc.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -60,5 +66,18 @@ public class UploadController {
             }
         }
         return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+    }
+
+    // 文件下载
+    public ResponseEntity<byte[]> download(String fileName, HttpSession session) throws IOException {
+        // 获取绝对路径
+        String realPath = session.getServletContext().getRealPath("/static");
+        File file = new File(realPath, fileName);
+        byte[] bytes = FileUtils.readFileToByteArray(file);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-disposition", "attachment;filename=" + fileName);
+
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 }

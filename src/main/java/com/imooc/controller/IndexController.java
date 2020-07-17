@@ -5,6 +5,19 @@ import com.imooc.model.SysUser;
 import com.imooc.service.CardService;
 import com.imooc.service.UserService;
 import com.imooc.utils.MD5Utils;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
@@ -19,6 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +56,42 @@ public class IndexController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
         return "login";
+    }
+
+    public static String getMessageByUrlToken(String id,String name,String token) throws UnsupportedEncodingException, URISyntaxException {
+
+        HttpHost proxy = new HttpHost("proxy02.h3c.com", 8080);
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+
+        CredentialsProvider provider = new BasicCredentialsProvider();
+
+        provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials("zys2349", "2691894sC!"));
+
+
+       CloseableHttpClient httpclient = HttpClients.custom().build();
+
+
+        java.net.URI uri = new URIBuilder("http://open.api.tianyancha.com/services/v4/open/xgbaseinfoV2").setParameter("id", id).setParameter("name", name).build();//URLEncoder.encode(name,"UTF-8")
+        //setParameter("id", id).
+        System.out.println(uri);
+        HttpGet request = new HttpGet(uri);//这里发送get请求
+        String result="";
+        try {
+
+            request.setHeader("Authorization", token);
+            //  CloseableHttpClient httpClient = HttpClients.createDefault();
+            // 通过请求对象获取响应对象
+            HttpResponse response = httpclient.execute(request);
+
+            // 判断网络连接状态码是否正常(0--200都数正常)
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result= EntityUtils.toString(response.getEntity(),"utf-8");
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @RequestMapping(value = "/checkLogin", method = RequestMethod.POST)
