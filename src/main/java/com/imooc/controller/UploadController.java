@@ -76,7 +76,7 @@ public class UploadController {
         byte[] bytes = FileUtils.readFileToByteArray(file);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "attachment;filename=" + fileName);
+        headers.add("content-disposition", "attachment;filename=" +  java.net.URLEncoder.encode(fileName,"UTF-8"));
 
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
