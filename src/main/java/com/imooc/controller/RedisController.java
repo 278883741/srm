@@ -48,13 +48,14 @@ public class RedisController {
         if (!bindingResult.hasErrors()) {
             boolean result = stringRedisTemplate.hasKey("");
         }
-        stringRedisTemplate.opsForValue().set("name", "xiaoming");
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set("name", "xiaoming");
 
-        stringRedisTemplate.opsForValue().set("time","data",5l, TimeUnit.SECONDS);
+        valueOperations.set("time","data",5l, TimeUnit.SECONDS);
         //  这样会使这个key的值再次永久不过期,先执行了remove
-        stringRedisTemplate.opsForValue().set("time","data");
+        valueOperations.set("time","data");
 
-        String name = stringRedisTemplate.opsForValue().get("name");
+        String name = valueOperations.get("name");
         return name;
     }
 
