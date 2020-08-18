@@ -30,6 +30,7 @@ public class RedisController {
     // google的限流工具，单线程限流服务，底层实现是令牌桶
     // 每秒往桶里放多少个令牌，每个请求必须先去桶里拿到一个令牌才可以做接下来的操作
     // redis - 缓存穿透：无限查询一个数据库和redis缓存都不存在的id，解决办法1：当查询id的值为null时候，也把id插入redis缓存，解决办法2：限流
+    // https://www.jianshu.com/p/b7f822935e28 - 雪崩，热点数据失效相关知识
     private static final RateLimiter limiter = RateLimiter.create(1);
 
     @Autowired
@@ -52,7 +53,7 @@ public class RedisController {
         valueOperations.set("name", "xiaoming");
 
         valueOperations.set("time","data",5l, TimeUnit.SECONDS);
-        //  这样会使这个key的值再次永久不过期,先执行了remove
+        // 这样会使这个key的值再次永久不过期,先执行了remove
         valueOperations.set("time","data");
 
         String name = valueOperations.get("name");
@@ -160,5 +161,28 @@ public class RedisController {
         Long i = hashOperations.delete(key,"1000","1001");
 
         Boolean hasKey = hashOperations.hasKey(key, "1000");
+    }
+
+    // 缓存击穿: 查询的途中key突然失效,解决办法是添加一个互斥锁，这块没太整明白
+    public String get(String key) {
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+
+        String value = valueOperations.get(key);
+        if (value == null) { //代表缓存值过期
+            //设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db
+            String keynx = key.concat(":nx");
+            if (valueOperations.setIfAbsent(keynx, "")) { //代表设置成功
+                // value = db.get(key);
+                valueOperations.set(key, value);
+                // valueOperations.del(keynx);
+            } else {
+                //这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可
+                // sleep(50);
+                get(key); //重试
+            }
+        } else {
+            return value;
+        }
+        return "";
     }
 }

@@ -51,7 +51,7 @@
             <property name="mergeable" value="true" />
         </javaClientGenerator>
 
-        <table tableName="card_property" enableCountByExample="${enabledExample}"
+        <table tableName="red_rob_record" enableCountByExample="${enabledExample}"
                enableUpdateByExample="${enabledExample}" enableDeleteByExample="${enabledExample}"
                enableSelectByExample="${enabledExample}" selectByExampleQueryId="${enabledExample}">
             <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID() AS id "
