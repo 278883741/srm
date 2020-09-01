@@ -7,10 +7,9 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="red_packet" jdbcType="VARCHAR" property="redPacket" />
     <result column="total" jdbcType="INTEGER" property="total" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="is_active" jdbcType="TINYINT" property="isActive" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>

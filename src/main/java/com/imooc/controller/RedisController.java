@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 // https://repo1.maven.org/maven2/
 @RestController
-@RequestMapping(value = "string")
+@RequestMapping(value = "/redis")
 public class RedisController {
     private static final Logger log = LoggerFactory.getLogger(RedisController.class);
 
@@ -34,12 +34,9 @@ public class RedisController {
     private static final RateLimiter limiter = RateLimiter.create(1);
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "/string", method = RequestMethod.POST)
     public Object add(@RequestBody @Validated Card card, BindingResult bindingResult) {
         // 尝试获取到一个令牌才可操作
         if(limiter.tryAcquire(1)){
@@ -47,9 +44,9 @@ public class RedisController {
         }
 
         if (!bindingResult.hasErrors()) {
-            boolean result = stringRedisTemplate.hasKey("");
+            boolean result = redisTemplate.hasKey("");
         }
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set("name", "xiaoming");
 
         valueOperations.set("time","data",5l, TimeUnit.SECONDS);
@@ -61,6 +58,7 @@ public class RedisController {
     }
 
     // list -- 有序的
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public void testList() {
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
 
@@ -70,7 +68,8 @@ public class RedisController {
         listOperations.leftPush(key, "b");
         listOperations.leftPushAll(key, list);
         // 因为是lpush，现在的数据是e d c b a
-        long length = listOperations.size(key);
+
+        Long length = listOperations.size(key);
         // 取数据
         List<String> data = listOperations.range(key, 0, 100);
         // 下标为4的数据
@@ -165,18 +164,18 @@ public class RedisController {
 
     // 缓存击穿: 查询的途中key突然失效,解决办法是添加一个互斥锁，这块没太整明白
     public String get(String key) {
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         String value = valueOperations.get(key);
         if (value == null) { //代表缓存值过期
-            //设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db
+            // 设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db
             String keynx = key.concat(":nx");
             if (valueOperations.setIfAbsent(keynx, "")) { //代表设置成功
                 // value = db.get(key);
                 valueOperations.set(key, value);
                 // valueOperations.del(keynx);
             } else {
-                //这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可
+                // 这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可
                 // sleep(50);
                 get(key); //重试
             }

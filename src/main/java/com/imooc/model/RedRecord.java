@@ -1,11 +1,12 @@
 package com.imooc.model;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+
 @Table(name = "red_record")
-public class RedRecord {
+public class RedRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,12 +18,6 @@ public class RedRecord {
     private Integer userId;
 
     /**
-     * 红包全局唯一标识串
-     */
-    @Column(name = "red_packet")
-    private String redPacket;
-
-    /**
      * 人数
      */
     private Integer total;
@@ -30,10 +25,10 @@ public class RedRecord {
     /**
      * 总金额（单位为分）
      */
-    private BigDecimal amount;
+    private Integer amount;
 
     @Column(name = "is_active")
-    private Byte isActive;
+    private Boolean isActive;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -71,24 +66,6 @@ public class RedRecord {
     }
 
     /**
-     * 获取红包全局唯一标识串
-     *
-     * @return red_packet - 红包全局唯一标识串
-     */
-    public String getRedPacket() {
-        return redPacket;
-    }
-
-    /**
-     * 设置红包全局唯一标识串
-     *
-     * @param redPacket 红包全局唯一标识串
-     */
-    public void setRedPacket(String redPacket) {
-        this.redPacket = redPacket;
-    }
-
-    /**
      * 获取人数
      *
      * @return total - 人数
@@ -111,7 +88,7 @@ public class RedRecord {
      *
      * @return amount - 总金额（单位为分）
      */
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
@@ -120,21 +97,21 @@ public class RedRecord {
      *
      * @param amount 总金额（单位为分）
      */
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
     /**
      * @return is_active
      */
-    public Byte getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
     /**
      * @param isActive
      */
-    public void setIsActive(Byte isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 

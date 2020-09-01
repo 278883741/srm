@@ -6,33 +6,16 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.imooc.model.*;
 import com.imooc.service.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 @Controller
@@ -66,9 +49,6 @@ public class CardController {
         // 这个是找相对的url，比如两个url都叫/list,那找的是自己controller下的
         // return "forward:list";
     }
-
-
-
 
     /**
      * 分页获取卡牌数据
@@ -199,8 +179,6 @@ public class CardController {
         model.addAttribute("cardSetList",cardSetService.getList(new CardSet()));
     }
 
-
-
     @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable Integer id,Model model){
         Card card = new Card();
@@ -238,8 +216,6 @@ public class CardController {
         return "card/detail";
     }
 
-
-
     @RequestMapping(value = "/queryListByaPage", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "获取卡牌", notes = "获取卡牌")
@@ -247,8 +223,7 @@ public class CardController {
             @ApiImplicitParam(name = "pageNum", value = "pageNum", required = true, dataType = "int", paramType = "query",defaultValue = "1",readOnly = true),
             @ApiImplicitParam(name = "pageSize", value = "pageSize", required = true, dataType = "int", paramType = "query",defaultValue = "10",readOnly = true)
     })
-
-    public Object queryListByaPage(Integer pageNum, Integer pageSize) {
+    public Object queryListByPage(Integer pageNum, Integer pageSize) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",1);
         jsonObject.put("msg","操作成功");

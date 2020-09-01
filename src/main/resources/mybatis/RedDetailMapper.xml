@@ -7,8 +7,8 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="record_id" jdbcType="INTEGER" property="recordId" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="is_active" jdbcType="TINYINT" property="isActive" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>

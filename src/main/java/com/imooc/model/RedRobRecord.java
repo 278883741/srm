@@ -1,6 +1,5 @@
 package com.imooc.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -17,15 +16,9 @@ public class RedRobRecord {
     private Integer userId;
 
     /**
-     * 红包标识串
-     */
-    @Column(name = "red_packet")
-    private String redPacket;
-
-    /**
      * 红包金额（单位为分）
      */
-    private BigDecimal amount;
+    private Integer amount;
 
     /**
      * 时间
@@ -33,8 +26,8 @@ public class RedRobRecord {
     @Column(name = "rob_time")
     private Date robTime;
 
-    @Column(name = "is_active")
-    private Byte isActive;
+    @Column(name = "record_id")
+    private Integer recordId;
 
     /**
      * @return id
@@ -69,29 +62,11 @@ public class RedRobRecord {
     }
 
     /**
-     * 获取红包标识串
-     *
-     * @return red_packet - 红包标识串
-     */
-    public String getRedPacket() {
-        return redPacket;
-    }
-
-    /**
-     * 设置红包标识串
-     *
-     * @param redPacket 红包标识串
-     */
-    public void setRedPacket(String redPacket) {
-        this.redPacket = redPacket;
-    }
-
-    /**
      * 获取红包金额（单位为分）
      *
      * @return amount - 红包金额（单位为分）
      */
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
@@ -100,7 +75,7 @@ public class RedRobRecord {
      *
      * @param amount 红包金额（单位为分）
      */
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
@@ -123,16 +98,16 @@ public class RedRobRecord {
     }
 
     /**
-     * @return is_active
+     * @return record_id
      */
-    public Byte getIsActive() {
-        return isActive;
+    public Integer getRecordId() {
+        return recordId;
     }
 
     /**
-     * @param isActive
+     * @param recordId
      */
-    public void setIsActive(Byte isActive) {
-        this.isActive = isActive;
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
 }

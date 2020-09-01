@@ -1,6 +1,5 @@
 package com.imooc.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -19,10 +18,10 @@ public class RedDetail {
     /**
      * 每个小红包的金额（单位为分）
      */
-    private BigDecimal amount;
+    private Integer amount;
 
     @Column(name = "is_active")
-    private Byte isActive;
+    private Boolean isActive;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -64,7 +63,7 @@ public class RedDetail {
      *
      * @return amount - 每个小红包的金额（单位为分）
      */
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
@@ -73,21 +72,21 @@ public class RedDetail {
      *
      * @param amount 每个小红包的金额（单位为分）
      */
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
     /**
      * @return is_active
      */
-    public Byte getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
     /**
      * @param isActive
      */
-    public void setIsActive(Byte isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
