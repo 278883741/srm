@@ -71,7 +71,7 @@ public class RedPacketController {
         redRecord.setCreateTime(new Date());
         redRecordService.add(redRecord);
 
-        for (int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             RedDetail redDetail = new RedDetail();
             redDetail.setRecordId(redRecord.getId());
             redDetail.setAmount(list.get(i));
@@ -83,7 +83,7 @@ public class RedPacketController {
         // 3.将红包个数及红包明细放入缓存
         redisTemplate.opsForValue().set("redPacket:total", totalPeople.toString());
         List<String> data = new ArrayList<>();
-        list.forEach(item ->{
+        list.forEach(item -> {
             data.add(item.toString());
         });
         redisTemplate.opsForList().leftPushAll("redPacket:list", data);

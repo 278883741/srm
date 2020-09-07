@@ -29,15 +29,13 @@ public class RedisController {
 
     // google的限流工具，单线程限流服务，底层实现是令牌桶
     // 每秒往桶里放多少个令牌，每个请求必须先去桶里拿到一个令牌才可以做接下来的操作
-    // redis - 缓存穿透：无限查询一个数据库和redis缓存都不存在的id，解决办法1：当查询id的值为null时候，也把id插入redis缓存，解决办法2：限流
-    // https://www.jianshu.com/p/b7f822935e28 - 雪崩，热点数据失效相关知识
     private static final RateLimiter limiter = RateLimiter.create(1);
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @RequestMapping(value = "/string", method = RequestMethod.POST)
-    public Object add(@RequestBody @Validated Card card, BindingResult bindingResult) {
+    public Object add(@RequestBody @Validated Card card, BindingResult bindingResult) throws Exception{
         // 尝试获取到一个令牌才可操作
         if(limiter.tryAcquire(1)){
 
@@ -49,7 +47,7 @@ public class RedisController {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set("name", "xiaoming");
 
-        valueOperations.set("time","data",5l, TimeUnit.SECONDS);
+        valueOperations.set("time","data",60, TimeUnit.SECONDS);
         // 这样会使这个key的值再次永久不过期,先执行了remove
         valueOperations.set("time","data");
 
@@ -163,6 +161,8 @@ public class RedisController {
     }
 
     // 缓存击穿: 查询的途中key突然失效,解决办法是添加一个互斥锁，这块没太整明白
+    // redis - 缓存穿透：无限查询一个数据库和redis缓存都不存在的id，解决办法1：当查询id的值为null时候，也把id插入redis缓存，解决办法2：限流
+    // https://www.jianshu.com/p/b7f822935e28 - 雪崩，热点数据失效相关知识 -- 设置热点数据永不过期
     public String get(String key) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
@@ -170,6 +170,7 @@ public class RedisController {
         if (value == null) { //代表缓存值过期
             // 设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db
             String keynx = key.concat(":nx");
+            // 单线程阻塞，只有没有key值才插入
             if (valueOperations.setIfAbsent(keynx, "")) { //代表设置成功
                 // value = db.get(key);
                 valueOperations.set(key, value);

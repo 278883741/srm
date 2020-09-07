@@ -1,14 +1,17 @@
 package com.imooc.config;
 
+import com.imooc.listener.SimpleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +42,7 @@ public class RabbitmqConfig {
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         factory.setConcurrentConsumers(1);
         factory.setMaxConcurrentConsumers(1);
+        // 一次获取多少个消息
         factory.setPrefetchCount(1);
         factory.setTxSize(1);
         return factory;
@@ -54,7 +58,7 @@ public class RabbitmqConfig {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factoryConfigurer.configure(factory, connectionFactory);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
-        // 关闭手动应答
+        // 需要手动应答，none关闭手动应答,MANUAL手动应答
         factory.setAcknowledgeMode(AcknowledgeMode.NONE);
         factory.setConcurrentConsumers(10);
         factory.setMaxConcurrentConsumers(20);
@@ -86,20 +90,57 @@ public class RabbitmqConfig {
 
     /*
         如下配置，当程序启动的时候并不会创建exchange01及routingKey01，当我们调用了sendSimpleMessage方法才会创建
+        配置帮我们做了exchange01 - queue01 - routingKey01的绑定
         当我们发送了消息到exchange01，routingKey01之后，相关绑定的队列就自动接收到了消息
      */
     @Bean
-    public DirectExchange basicExchange(){
-        return new DirectExchange("exchange01", true,false);
+    public DirectExchange basicExchange() {
+        return new DirectExchange("exchange01", true, false);
     }
 
     @Bean(name = "basicQueue")
-    public Queue basicQueue(){
+    public Queue basicQueue() {
         return new Queue("queue01", true);
     }
 
     @Bean
-    public Binding basicBinding(){
+    public Binding basicBinding() {
         return BindingBuilder.bind(basicQueue()).to(basicExchange()).with("routingKey01");
+    }
+
+    @Bean(name = "simpleQueue")
+    public Queue simpleQueue() {
+        return new Queue("queue02", true);
+    }
+
+    @Bean
+    public TopicExchange simpleExchange() {
+        return new TopicExchange("exchange02", true, false);
+    }
+
+    @Bean
+    public Binding simpleBinding() {
+        return BindingBuilder.bind(simpleQueue()).to(simpleExchange()).with("routingKey02");
+    }
+
+    @Autowired
+    private SimpleListener simpleListener;
+
+    @Bean(name = "simpleContainer")
+    public SimpleMessageListenerContainer simpleContainer(@Qualifier("simpleQueue") Queue simpleQueue) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setMessageConverter(new Jackson2JsonMessageConverter());
+
+        //TODO：并发配置
+        container.setConcurrentConsumers(5);
+        container.setMaxConcurrentConsumers(10);
+        container.setPrefetchCount(5);
+
+        //TODO：消息确认-确认机制种类
+        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        container.setQueues(simpleQueue);
+        container.setMessageListener(simpleListener);
+        return container;
     }
 }
