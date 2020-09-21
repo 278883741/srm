@@ -1,5 +1,5 @@
 package com.imooc.proxy;
 
 public interface ICar {
-    void run();
+    void run(String person,String carName);
 }

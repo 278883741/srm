@@ -17,6 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class RabbitmqConfig {
     private static final Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
@@ -88,46 +91,57 @@ public class RabbitmqConfig {
         return rabbitTemplate;
     }
 
-    /*
-        如下配置，当程序启动的时候并不会创建exchange01及routingKey01，当我们调用了sendSimpleMessage方法才会创建
-        配置帮我们做了exchange01 - queue01 - routingKey01的绑定
-        当我们发送了消息到exchange01，routingKey01之后，相关绑定的队列就自动接收到了消息
-     */
+    // 直连模式
     @Bean
-    public DirectExchange basicExchange() {
+    public DirectExchange directExchange() {
         return new DirectExchange("exchange01", true, false);
     }
 
-    @Bean(name = "basicQueue")
-    public Queue basicQueue() {
-        return new Queue("queue01", true);
+    @Bean
+    public Queue directQueue() {
+        return new Queue("directQueue", true);
     }
 
     @Bean
-    public Binding basicBinding() {
-        return BindingBuilder.bind(basicQueue()).to(basicExchange()).with("routingKey01");
+    public Binding directBinding() {
+        return BindingBuilder.bind(directQueue()).to(directExchange()).with("routingKey_direct");
     }
 
-    @Bean(name = "simpleQueue")
-    public Queue simpleQueue() {
-        return new Queue("queue02", true);
+    // 主题模式
+    @Bean
+    public Queue firstQueue() {
+        return new Queue("topic.firstQueue", true);
     }
 
     @Bean
-    public TopicExchange simpleExchange() {
-        return new TopicExchange("exchange02", true, false);
+    public Queue secondQueue() {
+        return new Queue("topic.secondQueue", true);
     }
 
     @Bean
-    public Binding simpleBinding() {
-        return BindingBuilder.bind(simpleQueue()).to(simpleExchange()).with("routingKey02");
+    public TopicExchange topicExchange() {
+        return new TopicExchange("exchange_topic", true, false);
     }
 
+    /*
+        只要像如下这样绑定，到topic.#，那么今后发消息时候只要routingKey以topic开头，消费者都会接收到消息
+     */
+    @Bean
+    public Binding bindingExchangeMessage1() {
+        return BindingBuilder.bind(firstQueue()).to(topicExchange()).with("topic.#");
+    }
+
+    @Bean
+    public Binding bindingExchangeMessage2() {
+        return BindingBuilder.bind(secondQueue()).to(topicExchange()).with("topic.#");
+    }
+
+    // 发送接收消息的第二种方式，写container，写Listener
     @Autowired
     private SimpleListener simpleListener;
 
     @Bean(name = "simpleContainer")
-    public SimpleMessageListenerContainer simpleContainer(@Qualifier("simpleQueue") Queue simpleQueue) {
+    public SimpleMessageListenerContainer simpleContainer() {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setMessageConverter(new Jackson2JsonMessageConverter());
@@ -139,8 +153,43 @@ public class RabbitmqConfig {
 
         //TODO：消息确认-确认机制种类
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-        container.setQueues(simpleQueue);
+        container.setQueues(directQueue());
         container.setMessageListener(simpleListener);
         return container;
+    }
+
+    // 死信队列 - 用途：比如用户下单10分钟还没支付，那我们就要先把订单放进死信队列，然后超时未支付再做后续处理
+    // 数据放入死信队列（生产端），另一个队列绑定map中的路由和routingKey去消费其中的数据
+    @Bean
+    public Queue deadQueue(){
+        Map<String, Object> args = new HashMap();
+
+        // DLX - dead letter exchange,DLK - dead letter routingKey,TTL - 超时时间
+        args.put("x-dead-letter-exchange", "exchange_dead");
+        args.put("x-dead-letter-routing-key", "routingKey_dead");
+        args.put("x-message-ttl", 10000);
+
+        return new Queue("queue_dead",true,false,false,args);
+    }
+
+    @Bean
+    public TopicExchange deadExchange(){
+        return new TopicExchange("produce_exchange_dead",true,false);
+    }
+
+    @Bean
+    public Binding bindingDeadExchange(){
+        return BindingBuilder.bind(deadQueue()).to(deadExchange()).with("produce_routingKey_dead");
+    }
+
+    // 死信队列实际的消费者
+    @Bean
+    public Queue deadQueue_consume(){
+        return new Queue("queue_deadConsume",true);
+    }
+
+    @Bean
+    public Binding simpleDeadRealBinding(){
+        return BindingBuilder.bind(deadQueue_consume()).to(deadExchange()).with("routingKey_dead");
     }
 }

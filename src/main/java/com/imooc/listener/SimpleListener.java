@@ -26,7 +26,10 @@ public class SimpleListener implements ChannelAwareMessageListener {
             RedRecord user = objectMapper.readValue(msg, RedRecord.class);
             logger.info("简单消息监听确认机制监听到消息： {} ", user);
 
-
+            /*
+                deliveryTag（消息的唯一标识 ID）
+                multiple：为了减少网络流量，手动确认可以被批处理，当该参数为 true 时，则可以一次性确认 delivery_tag 小于等于传入值的所有消息
+             */
             channel.basicAck(tag, true);
         } catch (Exception e) {
             logger.error("简单消息监听确认机制发生异常：", e.fillInStackTrace());

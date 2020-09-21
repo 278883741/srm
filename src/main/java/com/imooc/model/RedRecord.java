@@ -128,4 +128,16 @@ public class RedRecord implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    @Override
+    public String toString() {
+        return "RedRecord{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", total=" + total +
+                ", amount=" + amount +
+                ", isActive=" + isActive +
+                ", createTime=" + createTime +
+                '}';
+    }
 }
